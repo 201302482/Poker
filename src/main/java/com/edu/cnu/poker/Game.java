@@ -28,8 +28,14 @@ public class Game {
         System.out.printf( "Winner: " + "player" + "0" + "\nCards: " + handRanking );
     }
 
-    public boolean isPlayer1Winner(HandRanking handRankingOfPlayer1, HandRanking handRankingOfPlayer2){
-        return false;
+    public Result isPlayer1Winner(HandRanking handRankingOfPlayer1, HandRanking handRankingOfPlayer2){
+        if( handRankingOfPlayer1.getRankOfHand() > handRankingOfPlayer2.getRankOfHand() ){
+            return Result.WIN;
+        }
+        else if(handRankingOfPlayer1.getRankOfHand() == handRankingOfPlayer2.getRankOfHand() ){
+            return Result.DRAW;
+        }
+        else    return Result.LOSE;
     }
 
     public void run(){
