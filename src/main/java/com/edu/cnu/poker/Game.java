@@ -11,21 +11,29 @@ import java.util.List;
 public class Game {
     private Deck deck;
     private Evaluator evaluator;
-    private List<Player> player;
+    private Player player1;
+    private Player player2;
 
     public Game(int playerNumber) {
         deck = new Deck(1);
         evaluator = new Evaluator();
-        player = new ArrayList<Player>();
-
-        for(int i = 0; i < playerNumber; i++) {
-            player.add(new Player(new Hand(deck, PokerType.FIVE)));
-        }
+        player1 = new Player(new Hand(deck, PokerType.FIVE));
+        player2 = new Player(new Hand(deck, PokerType.FIVE));
     }
 
     public void gamePlayAndPrintResult() {
-        HandRanking handRanking = evaluator.evaluate(player.get(0).getHand().getCardList());
-        System.out.printf( "Winner: " + "player" + "0" + "\nCards: " + handRanking );
+        HandRanking handRanking1 = evaluator.evaluate(player1.getHand().getCardList());
+        HandRanking handRanking2 = evaluator.evaluate(player2.getHand().getCardList());
+        int gameResult = isPlayer1Winner(handRanking1, handRanking2).getGameResult();
+
+        System.out.println( "player1's cards: " + handRanking1 + "\t.... " + player1.getHand().getCards() );
+        System.out.println( "player2's cards: " + handRanking2 + "\t.... " + player2.getHand().getCards() );
+        if( gameResult == 0 )
+            System.out.println( "Winner is player1" );
+        else if( gameResult == 1 )
+            System.out.println( "Draw" );
+        else
+            System.out.println( "Winner is player2" );
     }
 
     public Result isPlayer1Winner(HandRanking handRankingOfPlayer1, HandRanking handRankingOfPlayer2){

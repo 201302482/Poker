@@ -26,4 +26,11 @@ public class Hand {
     public int getTotalCard() {
         return cardList.size();
     }
+
+    public String getCards(){
+        StringBuffer cardBuf = new StringBuffer();
+        for(int i = 0; i < cardList.size(); i++)
+            cardBuf.append("[" + cardList.get(i).getSuit() + ", " + cardList.get(i).getRank() + "]  ");
+        return cardBuf.toString();
+    }
 }

@@ -13,7 +13,7 @@ public enum Result {
     Result(int result) {
         this.gameResult = result;
     } //construtor
-    public int getRankOfHand() {
+    public int getGameResult() {
         return this.gameResult;
     }
 }
