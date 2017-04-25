@@ -2,10 +2,12 @@ package com.edu.cnu.poker;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 /**
  * Created by cse on 2017-04-17.
  */
+@Data
 public class Hand {
 
     private Deck deck;

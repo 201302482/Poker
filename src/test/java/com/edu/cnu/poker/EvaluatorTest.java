@@ -99,10 +99,10 @@ public class EvaluatorTest {
     public void 숫자가_5번연속되면_스트레이트이다 () {
         Evaluator evaluator = new Evaluator();
         List<Card> cardList = Arrays.asList(
-                new Card(10, Suit.DIAMONDS),
-                new Card(11, Suit.HEARTS),
-                new Card(12, Suit.DIAMONDS),
-                new Card(13, Suit.SPADES),
+                new Card(5, Suit.DIAMONDS),
+                new Card(4, Suit.HEARTS),
+                new Card(3, Suit.DIAMONDS),
+                new Card(2, Suit.SPADES),
                 new Card(1, Suit.CLUBS)
         );
         HandRanking result = evaluator.evaluate(cardList);
@@ -135,6 +135,33 @@ public class EvaluatorTest {
         );
         HandRanking result = evaluator.evaluate(cardList);
         assertThat(result, is(HandRanking.ROYAL_STRAIGHT_FLUSH));
+    }
+    @Test
+    public void 숫자가_5번연속이고_모양이_같고_BACK이면_백스트레이트플러쉬이다() {
+        Evaluator evaluator = new Evaluator();
+        List<Card> cardList = Arrays.asList(
+                new Card(1, Suit.HEARTS),
+                new Card(10, Suit.HEARTS),
+                new Card(11, Suit.HEARTS),
+                new Card(12, Suit.HEARTS),
+                new Card(13, Suit.HEARTS)
+        );
+        HandRanking result = evaluator.evaluate(cardList);
+        assertThat(result, is(HandRanking.BACK_STRAIGHT_FLUSH));
+    }
+
+    @Test
+    public void 숫자가_5번연속이고_BACK이면_백스트레이트이다() {
+        Evaluator evaluator = new Evaluator();
+        List<Card> cardList = Arrays.asList(
+                new Card(1, Suit.SPADES),
+                new Card(10, Suit.DIAMONDS),
+                new Card(11, Suit.SPADES),
+                new Card(12, Suit.HEARTS),
+                new Card(13, Suit.SPADES)
+        );
+        HandRanking result = evaluator.evaluate(cardList);
+        assertThat(result, is(HandRanking.BACK_STRAIGHT));
     }
 
 }
