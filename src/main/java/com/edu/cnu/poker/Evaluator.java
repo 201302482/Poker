@@ -1,9 +1,6 @@
 package com.edu.cnu.poker;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by cse on 2017-04-17.
@@ -35,18 +32,24 @@ public class Evaluator {
 
         /* Loyal Straight Flush */
         for (Suit key : tempMap.keySet()) {
-            if (tempMap.get(key) == 5 && key == Suit.SPADES) {
-                if (cardList.get(0).getRank() == 1 && cardList.get(1).getRank() == 10 &&
-                        isCardsStraight(2,cardList)) return HandRanking.ROYAL_STRAIGHT_FLUSH;
+            /* if FLUSH, make new FLUSH cards List */
+            if (tempMap.get(key) >= 5 && key == Suit.SPADES) {
+                List newCardList = isFlushThenMakeNewCardsList(cardList, key);
+                /* if FLUSH, check isBackStraight */
+                if(isCardsBackStraight(newCardList)) return HandRanking.ROYAL_STRAIGHT_FLUSH;
             }
         }
 
         /* Straight Flush */
         for (Suit key : tempMap.keySet()) {
-            if (tempMap.get(key) == 5) {
-                if(isCardsStraight(1,cardList)) return HandRanking.STRAIGHT_FLUSH;
-                if (cardList.get(0).getRank() == 1 && cardList.get(1).getRank() == 10 &&
-                        isCardsStraight(2,cardList)) return HandRanking.BACK_STRAIGHT_FLUSH;
+            List newCardList = cardList;
+            /* if FLUSH, make new FLUSH cards List */
+            if (tempMap.get(key) >= 5) {
+                newCardList = isFlushThenMakeNewCardsList(cardList, key);
+                /* if FLUSH, check isBackStraight */
+                if(isCardsBackStraight(newCardList)) return HandRanking.BACK_STRAIGHT_FLUSH;
+                /* if FLUSH, check isStraight */
+                if(isCardsStraight(newCardList)) return HandRanking.STRAIGHT_FLUSH;
             }
         }
 
@@ -59,9 +62,9 @@ public class Evaluator {
 
         /* Full house */
         for (Integer key1 : countMap.keySet()) {
-            if (countMap.get(key1) == 2) {
+            if (countMap.get(key1) >= 2) {
                 for (Integer key2 : countMap.keySet()) {
-                    if (countMap.get(key2) == 3 && key1 != key2) {
+                    if (countMap.get(key2) >= 3 && key1 != key2) {
                         return HandRanking.FULL_HOUSE;
                     }
                 }
@@ -70,15 +73,16 @@ public class Evaluator {
 
         /* Flush */
         for (Suit key : tempMap.keySet()) {
-            if (tempMap.get(key) == 5) {
+            if (tempMap.get(key) >= 5) {
                 return HandRanking.FLUSH;
             }
         }
 
-        /* Straight*/
-        if(isCardsStraight(1,cardList)) return HandRanking.STRAIGHT;
-        if (cardList.get(0).getRank() == 1 && cardList.get(1).getRank() == 10 &&
-                isCardsStraight(2,cardList)) return HandRanking.BACK_STRAIGHT;
+        /* Straight */
+        if(isCardsBackStraight(cardList)) return HandRanking.BACK_STRAIGHT;
+
+        /* Back Straight */
+        if(isCardsStraight(cardList)) return HandRanking.STRAIGHT;
 
         /* Triple */
         for(Integer key : countMap.keySet()){
@@ -107,11 +111,34 @@ public class Evaluator {
         return HandRanking.NOTHING;
     }
 
-    private boolean isCardsStraight(int startIndex, List<Card> cardList) {
-        for (int index = startIndex; index < cardList.size(); index++) {
-            if (cardList.get(index).getRank() - cardList.get(index-1).getRank() != 1)
-                return false;
+    private List isFlushThenMakeNewCardsList(List<Card> cardList, Suit key) {
+        ArrayList newCardList = new ArrayList<Card>();
+        for (Card card : cardList) {
+            if(card.getSuit() == key)
+                newCardList.add(card);
         }
-        return true;
+        return newCardList;
+    }
+
+    private boolean isCardsStraight(List<Card> cardList) {
+        for (int i = 0; i < cardList.size() - 4; i++) {
+            for (int index = i + 1; index < i + 5; index ++) { // 5 = HandRanking의 size
+                if (cardList.get(index).getRank() - cardList.get(index - 1).getRank() != 1)
+                    return false;
+                if (index == i + 4) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isCardsBackStraight(List<Card> cardList) {
+        if ( cardList.get(0).getRank() != 1 || cardList.get( cardList.size() - 4 ).getRank() != 10)
+            return false;
+        for (int index = cardList.size() - 3; index < cardList.size(); index++) {
+            if (cardList.get(index).getRank() - cardList.get(index - 1).getRank() != 1)
+                return false;
+            if (index == cardList.size()-1) return true;
+        }
+        return false;
     }
 }
