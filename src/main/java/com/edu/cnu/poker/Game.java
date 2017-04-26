@@ -14,11 +14,11 @@ public class Game {
     private Player player1;
     private Player player2;
 
-    public Game(int playerNumber) {
+    public Game(PokerType pokerType) {
         deck = new Deck(1);
         evaluator = new Evaluator();
-        player1 = new Player(new Hand(deck, PokerType.FIVE));
-        player2 = new Player(new Hand(deck, PokerType.FIVE));
+        player1 = new Player(new Hand(deck, pokerType));
+        player2 = new Player(new Hand(deck, pokerType));
     }
 
     public void gamePlayAndPrintResult() {
@@ -46,7 +46,7 @@ public class Game {
         else    return Result.LOSE;
     }
 
-    public void run(){
+    public void run() {
         gamePlayAndPrintResult();
     }
 
